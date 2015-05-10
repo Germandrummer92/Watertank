@@ -9,9 +9,9 @@ package watertankSplit;
  *
  */
 
-public class Simulator {
+public class Simulator extends Thread{
 	
-	private int TICK = 30;
+	private int TICK = 40;
 	private Controller contr;
 	private int y;
 	private int x;
@@ -21,11 +21,11 @@ public class Simulator {
 	
 	public Simulator() {
 		contr = new Controller();
-		state = 0;
+		state = 1;
 		y = 10;
-		x = 0;
-		oldDif = 0;
-		newDif = 0;
+		x = TICK;
+		oldDif = 10;
+		newDif = 10;
 	}
 	
 	private void step() {
@@ -51,6 +51,7 @@ public class Simulator {
 				y+=oldDif;
 				x+=10;
 			}
+			break;
 		case 1:
 			if (x == TICK) {
 				oldDif = newDif;
@@ -69,22 +70,35 @@ public class Simulator {
 				y+=newDif;
 				x+=10;
 			}
+			break;
 	}
 	}
 	
 	public static void main(String args[]) {
 		Simulator s = new Simulator();
-		do {
-			s.step();
-			s.printState();
-		} while(true);
+		s.run();
 	}
 
+	public void run() {
+		do {
+			step();
+			printState();
+				synchronized(this) {		
+					try {
+						this.wait(500);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}	
+					finally {} 
+				}
+		} while(true);
+	}
 	/**
 	 * 
 	 */
 	private void printState() {
-		System.out.println("Time: " + x/10 + " State: " + state + " Fillstatus:");
+		System.out.println("Time: " + x/10 + " newDif: " + newDif + " Fillstatus:");
 		for (int i = 0; i < y/10; i++) {
 			System.out.print("X ");
 		}

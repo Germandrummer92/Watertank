@@ -15,7 +15,7 @@ public class Controller {
 	
 	public Controller() {
 		state = 0;
-		tick = 3;
+		tick = 40;
 	}
 	
 	/*@ public normal_behavior
@@ -23,28 +23,25 @@ public class Controller {
 	  @ ensures \return * (tick - 2) + y + 2 * old >= 1 && \return * (tick - 2) + y + 2 * old <= 12 && y + 2 * old >= 1 && y + 2 * old <= 12
 	  @*/
 	public int getControlValue (int y, int old) {
-		int inTwoTicks = y + 2 * old;
+		//int inTwo = y + 2 * old;
 		
-		switch (state) {
-		case 0:
-			if (y >= 100) {
-				state = 1;
+		if (y == 10 && old  == 0) {
+			return 10;
+		}
+		else {
+			if (y >= (120 - (tick + 10))  && old == 10) {
 				return -20;
 			}
 			else {
-				return 10;
+				if (y <= (10 + (tick * 3 + 10)) && old == -20) {
+					return 10;
+				}
+				else {
+					return old;
+				}
 			}
-		
-		case 1:
-			if (y <= 50) {
-				state = 0;
-				return 10;
-			}
-			else {
-				return -20;
-			}
-		default: return 0;
+		}
 	}
 }
 
-}
+
