@@ -15,32 +15,34 @@ public class Controller {
 	
 	public Controller() {
 		state = 0;
-		tick = 40;
+		tick = 30;
 	}
 	
 	/*@ public normal_behavior
-	  @ requires ((state == 0) || (state == 1)) && y >= 10 && y <= 120 
-	  @ ensures \return * (tick - 2) + y + 2 * old >= 1 && \return * (tick - 2) + y + 2 * old <= 12 && y + 2 * old >= 1 && y + 2 * old <= 12
+	  @ requires tick > 20  && y >= 10 && y <= 120 && (old == 10 || old == -20) && y + 2 * old <= 120 && y + 2 * old >= 10;
+	  @ ensures \result * (tick - 2) + y + 2 * old >= 10 && \result * (tick - 2) + y + 2 * old <= 120;
 	  @*/
 	public int getControlValue (int y, int old) {
-		//int inTwo = y + 2 * old;
+		int inTwo = y + 2 * old;
 		
-		if (y == 10 && old  == 0) {
-			return 10;
+		if (old == 10) {
+			if (inTwo + (tick - 20) * 1 <= 120) {
+				return 10;
+			}
+			else {
+				return -20;
+			}
+			
 		}
-		else {
-			if (y >= (120 - (tick + 10))  && old == 10) {
+		if (old == -20) {
+			if (inTwo - (tick - 20) * 2 >= 10) {
 				return -20;
 			}
 			else {
-				if (y <= (10 + (tick * 3 + 10)) && old == -20) {
-					return 10;
-				}
-				else {
-					return old;
-				}
+				return 10;
 			}
 		}
+			return old;
 	}
 }
 
